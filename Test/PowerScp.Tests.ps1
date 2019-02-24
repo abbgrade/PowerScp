@@ -14,11 +14,24 @@ Describe 'ModuleManifest' {
 
 
 Import-Module $ModuleManifestPath
+
+$hostname = 'localhost'
+$username = 'foo'
+$plainPassword = 'pass'
+$password = ConvertTo-SecureString $plainPassword -AsPlainText -Force
+
 $image = Install-DockerImage -Repository 'atmoz/sftp'
 $serverContainer = $image | New-DockerContainer `
     -Ports @{ 22 = 22 } `
-    -Environment @{ SFTP_USERS = 'foo:pass:::upload' } `
+    -Environment @{ SFTP_USERS = "$( $username ):$plainPassword:::upload" } `
     -Detach
+
+Describe 'Get-Fingerprint' {
+    It 'returns something' {
+        Get-ScpFingerprint -HostName $hostname -UserName $username -Password $password -AnyFingerprint -Algorithm SHA256 |
+        Should -Not -BeNullOrEmpty
+    }
+}
 
 Describe 'Connect-Server' {
     It 'fails on invalid host' {
@@ -28,9 +41,8 @@ Describe 'Connect-Server' {
     }
 
     It 'returns session' {
-        $password = ConvertTo-SecureString 'pass' -AsPlainText -Force
-        Connect-ScpServer -HostName 'localhost' -UserName 'foo' -Password $password -AnyFingerprint
+        Connect-ScpServer -HostName $hostname -UserName $username -Password $password -AnyFingerprint |
+        Should -Not -BeNullOrEmpty
     }
 }
-
 $serverContainer | Remove-DockerContainer -Force
