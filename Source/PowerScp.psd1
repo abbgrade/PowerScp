@@ -3,7 +3,7 @@
     Author = 'Steffen Kampmann'
     RootModule = 'PowerScp.dll'
 
-    CmdletsToExport = 'Connect-Server', 'Get-Fingerprint'
+    CmdletsToExport = 'Connect-Server', 'Disconnect-Server', 'Get-Fingerprint'
 
     DefaultCommandPrefix = 'Scp'
 }

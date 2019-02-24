@@ -41,14 +41,14 @@ Describe 'Connect-Server' {
     }
 
     It 'works with any fingerprint' {
-        Connect-ScpServer -HostName $hostname -UserName $username -Password $password -AnyFingerprint |
-        Should -Not -BeNullOrEmpty
+        $session = Connect-ScpServer -HostName $hostname -UserName $username -Password $password -AnyFingerprint
+        $session.Opened | Should -Be $true
     }
 
     It 'works with correct fingerprint' {
         $fingerprint = Get-ScpFingerprint -HostName $hostname -UserName $username -Password $password -AnyFingerprint -Algorithm SHA256
-        Connect-ScpServer -HostName $hostname -UserName $username -Password $password -Fingerprint $fingerprint |
-        Should -Not -BeNullOrEmpty
+        $session = Connect-ScpServer -HostName $hostname -UserName $username -Password $password -Fingerprint $fingerprint
+        $session.Opened | Should -Be $true
     }
 
     It 'fails with wrong fingerprint' {
@@ -57,4 +57,14 @@ Describe 'Connect-Server' {
         } | Should -Throw
     }
 }
+
+Describe 'Disconnect-Server' {
+    $session = Connect-ScpServer -HostName $hostname -UserName $username -Password $password -AnyFingerprint
+
+    It 'does not throw' {
+        $session | Disconnect-ScpServer
+        $session.Opened | Should -Be $false
+    }
+}
+
 $serverContainer | Remove-DockerContainer -Force
