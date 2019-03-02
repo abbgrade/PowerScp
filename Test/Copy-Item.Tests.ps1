@@ -13,7 +13,7 @@ Describe 'Copy-Item' {
             $container = New-SftpServer
 
             # create local test file
-            $testPath = "$( ( Get-Item TestDrive:\ ).FullName )\test.txt"
+            $testPath = "$( $TestDrive.FullName )\upload-test.txt"
             Set-Content $testPath -value "my test text."
 
             $session = Connect-ScpServer `
@@ -34,7 +34,7 @@ Describe 'Copy-Item' {
                 -Destination '/upload/test.txt' `
                 -Session $session
 
-            "$ENV:TEMP\test.txt" | Should -Exist
+            "$( $container.VolumePath )\test.txt" | Should -Exist
         }
     }
 }

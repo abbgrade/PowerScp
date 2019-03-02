@@ -18,23 +18,23 @@ function New-SftpServer {
 
     [CmdletBinding()]
     param (
-        $VolumePath = 'Testdrive:\upload'
+        $VolumePath = "$( $TestDrive.FullName )\upload"
     )
 
     if ( -not ( Test-Path $VolumePath ) ) {
-        New-Item -Type Container -Path $VolumePath
+        New-Item -Type Container -Path $VolumePath | Out-Null
     }
 
     $container = Install-DockerImage -Repository 'atmoz/sftp' |
     New-DockerContainer `
         -Ports @{ 22 = 22 } `
         -Environment @{ SFTP_USERS = "$( $testConfig.Username ):$( $testConfig.PlainPassword ):::upload" } `
-        -Volumes @{ ( Get-Item $VolumePath ).FullName = "/home/$( $testConfig.Username )/upload" } `
+        -Volumes @{ $VolumePath = "/home/$( $testConfig.Username )/upload" } `
         -Detach
-    $container | Add-Member VolumePath $VolumePath
+    $container | Add-Member VolumePath $VolumePath | Out-Null
     $container | Write-Output
 
-    Start-Sleep -Seconds 1
+    Start-Sleep -Seconds 1 | Out-Null
 
 }
 
