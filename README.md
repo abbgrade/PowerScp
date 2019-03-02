@@ -1,5 +1,8 @@
 # PowerScp
 
+[![Build status](https://ci.appveyor.com/api/projects/status/ieexkg9xk2c63947?svg=true)](https://ci.appveyor.com/project/abbgrade/powerscp)
+
+
 ## Development
 
 ```powershell
