@@ -5,7 +5,7 @@ param (
 
 . $PSScriptRoot\TestHelper.ps1
 
-Describe 'Send-Item' {
+Describe 'Copy-Item' {
 
     Context 'running SFTP server with test file and open session' {
 
@@ -29,7 +29,7 @@ Describe 'Send-Item' {
 
         It 'copies the file to the server' {
 
-            Send-ScpItem `
+            Copy-ScpItem `
                 -Path $testPath `
                 -Destination '/upload/test.txt' `
                 -Session $session

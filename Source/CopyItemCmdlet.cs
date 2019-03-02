@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace PsScp
 {
-    [Cmdlet(VerbsCommunications.Send, "Item")]
+    [Cmdlet(VerbsCommon.Copy, "Item")]
     public class CopyItemCmdlet : PSCmdlet
     {
 

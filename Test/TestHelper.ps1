@@ -17,15 +17,22 @@ $testConfig = New-Object PsObject -Property @{
 function New-SftpServer {
 
     [CmdletBinding()]
-    param ()
+    param (
+        $VolumePath = 'Testdrive:\upload'
+    )
 
-    Install-DockerImage -Repository 'atmoz/sftp' |
+    if ( -not ( Test-Path $VolumePath ) ) {
+        New-Item -Type Container -Path $VolumePath
+    }
+
+    $container = Install-DockerImage -Repository 'atmoz/sftp' |
     New-DockerContainer `
         -Ports @{ 22 = 22 } `
         -Environment @{ SFTP_USERS = "$( $testConfig.Username ):$( $testConfig.PlainPassword ):::upload" } `
-        -Volumes @{ ( Get-Item $ENV:TEMP ).FullName = "/home/$( $testConfig.Username )/upload" } `
-        -Detach |
-    Write-Output
+        -Volumes @{ ( Get-Item $VolumePath ).FullName = "/home/$( $testConfig.Username )/upload" } `
+        -Detach
+    $container | Add-Member VolumePath $VolumePath
+    $container | Write-Output
 
     Start-Sleep -Seconds 1
 
