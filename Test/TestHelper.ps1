@@ -1,4 +1,4 @@
-#Requires -Modules Pester, @{ ModuleName="PSDocker"; ModuleVersion="1.3.0" }
+#Requires -Modules Pester, @{ ModuleName="PSDocker"; ModuleVersion="1.4.0" }
 
 param (
     [string] $PSScriptRoot = $( if ( $PSScriptRoot ) { $PSScriptRoot } else { Get-Location } ),
