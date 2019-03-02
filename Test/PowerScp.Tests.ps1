@@ -1,4 +1,4 @@
-#Requires -Modules Pester, @{ ModuleName="PSDocker"; ModuleVersion="1.2.0" }
+#Requires -Modules Pester, @{ ModuleName="PSDocker"; ModuleVersion="1.3.0" }
 
 param (
     [string] $PSScriptRoot = $( if ( $PSScriptRoot ) { $PSScriptRoot } else { Get-Location } ),
@@ -21,9 +21,11 @@ $plainPassword = 'pass'
 $password = ConvertTo-SecureString $plainPassword -AsPlainText -Force
 
 $image = Install-DockerImage -Repository 'atmoz/sftp'
+
 $serverContainer = $image | New-DockerContainer `
     -Ports @{ 22 = 22 } `
     -Environment @{ SFTP_USERS = "$( $username ):$plainPassword:::upload" } `
+    -Volumes @{ ( Get-Item $ENV:TEMP ).FullName = "/home/$username/upload" } `
     -Detach
 
 Describe 'Get-Fingerprint' {
@@ -67,4 +69,18 @@ Describe 'Disconnect-Server' {
     }
 }
 
-$serverContainer | Remove-DockerContainer -Force
+Describe 'Send-Item' {
+    It 'does not throw' {
+
+        $testPath = "$( ( Get-Item TestDrive:\ ).FullName )\test.txt"
+        Set-Content $testPath -value "my test text."
+
+        $session = Connect-ScpServer -HostName $hostname -UserName $username -Password $password -AnyFingerprint
+
+        Send-ScpItem -Path $testPath -Destination '/upload/test.txt' -Session $session
+
+        "$ENV:TEMP\test.txt" | Should -Exist
+    }
+}
+
+Remove-DockerContainer -Name $serverContainer.Name -Force
