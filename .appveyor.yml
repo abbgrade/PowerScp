@@ -14,9 +14,6 @@ install:
   - mv ../../.local/share/powershell/Modules/psdocker ../../.local/share/powershell/Modules/PSDocker # temporary fix
   - docker version
 
-platform:
-  - x64
-
 before_build:
   - ps: |
       # Define replacements for manifest file
