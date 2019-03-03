@@ -13,6 +13,9 @@ namespace PsScp
         [Parameter( Mandatory = true, ValueFromPipelineByPropertyName = true )]
         public string HostName { get; set; }
 
+        [Parameter( Mandatory = false, ValueFromPipelineByPropertyName = true )]
+        public int Port { get; set; } = 22;
+
         [Parameter( Mandatory = true, ValueFromPipelineByPropertyName = true )]
         public string UserName { get; set; }
 
@@ -32,6 +35,7 @@ namespace PsScp
         {
             Options = new SessionOptions {
                 HostName = HostName,
+                PortNumber = Port,
                 UserName = UserName,
                 SecurePassword = Password
             };

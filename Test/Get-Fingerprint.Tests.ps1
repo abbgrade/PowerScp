@@ -20,6 +20,7 @@ Describe 'Get-Fingerprint' {
         It 'returns something' {
             Get-ScpFingerprint `
                 -HostName $testConfig.Hostname `
+                -Port $testConfig.Port `
                 -UserName $testConfig.Username `
                 -Password $testConfig.Password `
                 -AnyFingerprint `

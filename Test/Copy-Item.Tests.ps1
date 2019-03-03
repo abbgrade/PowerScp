@@ -18,6 +18,7 @@ Describe 'Copy-Item' {
 
             $session = Connect-ScpServer `
                 -HostName $testConfig.Hostname `
+                -Port $testConfig.Port `
                 -UserName $testConfig.Username `
                 -Password $testConfig.Password `
                 -AnyFingerprint

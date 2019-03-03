@@ -12,6 +12,7 @@ $testConfig = New-Object PsObject -Property @{
     Username = 'foo'
     PlainPassword = 'pass'
     Password = ConvertTo-SecureString 'pass' -AsPlainText -Force
+    Port = 2222
 }
 
 function New-SftpServer {
@@ -27,7 +28,7 @@ function New-SftpServer {
 
     $container = Install-DockerImage -Repository 'atmoz/sftp' |
     New-DockerContainer `
-        -Ports @{ 22 = 22 } `
+        -Ports @{ $testConfig.Port = 22 } `
         -Environment @{ SFTP_USERS = "$( $testConfig.Username ):$( $testConfig.PlainPassword ):::upload" } `
         -Volumes @{ $VolumePath = "/home/$( $testConfig.Username )/upload" } `
         -Detach

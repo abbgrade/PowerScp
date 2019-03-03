@@ -26,6 +26,7 @@ Describe 'Connect-Server' {
         It 'connects with any fingerprint' {
             $session = Connect-ScpServer `
                 -HostName $testConfig.Hostname `
+                -Port $testConfig.Port `
                 -UserName $testConfig.Username `
                 -Password $testConfig.Password `
                 -AnyFingerprint
@@ -36,6 +37,7 @@ Describe 'Connect-Server' {
         It 'connects with correct fingerprint' {
             $fingerprint = Get-ScpFingerprint `
                 -HostName $testConfig.Hostname `
+                -Port $testConfig.Port `
                 -UserName $testConfig.Username `
                 -Password $testConfig.Password `
                 -AnyFingerprint `
@@ -43,6 +45,7 @@ Describe 'Connect-Server' {
 
             $session = Connect-ScpServer `
                 -HostName $testConfig.Hostname `
+                -Port $testConfig.Port `
                 -UserName $testConfig.Username `
                 -Password $testConfig.Password `
                 -Fingerprint $fingerprint
