@@ -1,4 +1,4 @@
-#Requires -Modules Pester, @{ ModuleName="PSDocker"; ModuleVersion="1.3.0" }
+#Requires -Modules Pester, @{ ModuleName="PSDocker"; ModuleVersion="1.4.0" }
 
 param (
     [string] $PSScriptRoot = $( if ( $PSScriptRoot ) { $PSScriptRoot } else { Get-Location } ),
@@ -17,17 +17,24 @@ $testConfig = New-Object PsObject -Property @{
 function New-SftpServer {
 
     [CmdletBinding()]
-    param ()
+    param (
+        $VolumePath = "$( $TestDrive.FullName )\upload"
+    )
 
-    Install-DockerImage -Repository 'atmoz/sftp' |
+    if ( -not ( Test-Path $VolumePath ) ) {
+        New-Item -Type Container -Path $VolumePath | Out-Null
+    }
+
+    $container = Install-DockerImage -Repository 'atmoz/sftp' |
     New-DockerContainer `
         -Ports @{ 22 = 22 } `
         -Environment @{ SFTP_USERS = "$( $testConfig.Username ):$( $testConfig.PlainPassword ):::upload" } `
-        -Volumes @{ ( Get-Item $ENV:TEMP ).FullName = "/home/$( $testConfig.Username )/upload" } `
-        -Detach |
-    Write-Output
+        -Volumes @{ $VolumePath = "/home/$( $testConfig.Username )/upload" } `
+        -Detach
+    $container | Add-Member VolumePath $VolumePath | Out-Null
+    $container | Write-Output
 
-    Start-Sleep -Seconds 1
+    Start-Sleep -Seconds 1 | Out-Null
 
 }
 
