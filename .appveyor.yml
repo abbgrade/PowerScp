@@ -10,6 +10,7 @@ image:
 install:
   - ps: Install-Module InvokeBuild -Scope CurrentUser -Force
   - ps: Install-Module Pester -Scope CurrentUser -Force -SkipPublisherCheck
+  - ps: Install-Module PSDocker -Scope CurrentUser -Force
   - docker version
 
 platform:
