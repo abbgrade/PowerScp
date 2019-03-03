@@ -11,6 +11,8 @@ task bin lib, {
 
 task lib {
     dotnet restore --packages .\lib
+
+    Get-ChildItem -Path .\lib -Recurse | Write-Verbose -Verbose
 }
 
 task Clean {
