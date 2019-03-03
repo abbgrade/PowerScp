@@ -11,8 +11,7 @@ install:
   - ps: Install-Module InvokeBuild -Scope CurrentUser -Force
   - ps: Install-Module Pester -Scope CurrentUser -Force -SkipPublisherCheck
   - ps: Install-Module PSDocker -Scope CurrentUser -Force
-  - ls -la ..
-  - mv ./.local/share/powershell/Modules/psdocker ./.local/share/powershell/Modules/PSDocker # temporary fix
+  - mv ../../.local/share/powershell/Modules/psdocker ../../.local/share/powershell/Modules/PSDocker # temporary fix
   - docker version
 
 platform:
