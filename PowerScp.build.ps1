@@ -7,6 +7,8 @@ task bin lib, {
     Copy-Item .\Source\PowerScp.psd1                                            -Destination bin/Debug/netstandard2.0/
     Copy-Item .\lib\winscp\*\lib\netstandard*\WinSCPnet.dll                     -Destination bin/Debug/netstandard2.0/
     Copy-Item .\lib\newtonsoft.json\*\lib\netstandard2.0\Newtonsoft.Json.dll    -Destination bin/Debug/netstandard2.0/
+
+    Get-ChildItem -Path .\bin -Recurse | Write-Verbose -Verbose
 }
 
 task lib {
